@@ -38,10 +38,10 @@ export default function App() {
 
   return (
     <View style={styles.appContainer}>
-      <StatusBar style="auto" />
+      <StatusBar style="light" />
       <Button
         title="Add New Event"
-        color="#5e0acc"
+        color="#a065ec"
         onPress={startAddEventHandler}
       />
       <EventInput
