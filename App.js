@@ -37,35 +37,37 @@ export default function App() {
   }
 
   return (
-    <View style={styles.appContainer}>
+    <>
       <StatusBar style="light" />
-      <Button
-        title="Add New Event"
-        color="#a065ec"
-        onPress={startAddEventHandler}
-      />
-      <EventInput
-        visible={modalIsVisible}
-        onAddEvent={addEventHandler}
-        onCancel={endAddEventHandler}
-      />
-      <View style={styles.eventsContainer}>
-        <FlatList
-          data={events}
-          renderItem={(itemData) => {
-            return <EventItem
-              text={itemData.item.text}
-              id={itemData.item.id}
-              onDeleteItem={deleteEventHandler}
-            />
-          }}
-        keyExtractor={(item, index) => {
-          return item.id;
-        }}
-        alwaysBounceVertical={false}
+      <View style={styles.appContainer}>
+        <Button
+          title="Add New Event"
+          color="#a065ec"
+          onPress={startAddEventHandler}
         />
+        <EventInput
+          visible={modalIsVisible}
+          onAddEvent={addEventHandler}
+          onCancel={endAddEventHandler}
+        />
+        <View style={styles.eventsContainer}>
+          <FlatList
+            data={events}
+            renderItem={(itemData) => {
+              return <EventItem
+                text={itemData.item.text}
+                id={itemData.item.id}
+                onDeleteItem={deleteEventHandler}
+              />
+            }}
+          keyExtractor={(item, index) => {
+            return item.id;
+          }}
+          alwaysBounceVertical={false}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 

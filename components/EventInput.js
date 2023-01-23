@@ -7,9 +7,11 @@ import {
     Modal,
     Image,
 } from 'react-native';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 function EventInput(props) {
     const [enteredEventText, setEnteredEventText] = useState('');
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     function eventInputHandler(enteredText) {
         setEnteredEventText(enteredText);
@@ -20,6 +22,20 @@ function EventInput(props) {
         setEnteredEventText('');
     }
 
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+      };
+    
+    const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+    };
+
+    const handleConfirm = (date) => {
+        console.warn("A date has been picked: ", date);
+        //console.warn("Converted date: ", date.toString());
+        hideDatePicker();
+    };
+
     return (
         <Modal visible={props.visible} animationType="slide">
             <View style={styles.inputContainer}>
@@ -27,6 +43,17 @@ function EventInput(props) {
                     style={styles.image}
                     // source={require('../assets/images/')}
                 />
+                <View style={styles.buttonDateContainer}>
+                    <View style={styles.button}>
+                        <Button title="Pick Date" onPress={showDatePicker} />
+                    </View>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="datetime"
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                    />
+                </View>
                 <TextInput
                     style={styles.textInput}
                     placeholder="Your event!"
@@ -73,6 +100,10 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 16,
+        flexDirection: 'row',
+    },
+    buttonDateContainer: {
+        marginBottom: 16,
         flexDirection: 'row',
     },
     button: {
