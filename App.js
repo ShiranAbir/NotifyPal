@@ -22,10 +22,10 @@ export default function App() {
     setModalIsVisible(false);
   }
 
-  function addEventHandler(enteredEventText) {
+  function addEventHandler(enteredEventText, date) {
     setEvents((currentEvents) => [
       ...currentEvents,
-      { text: enteredEventText, id: Math.random().toString() },
+      { text: date.toString() + " " + enteredEventText, id: Math.random().toString() },
     ]);
     endAddEventHandler();
   }

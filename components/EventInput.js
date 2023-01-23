@@ -12,13 +12,14 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 function EventInput(props) {
     const [enteredEventText, setEnteredEventText] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [date, setDate] = useState(new Date());
 
     function eventInputHandler(enteredText) {
         setEnteredEventText(enteredText);
     }
 
     function addEventHandler() {
-        props.onAddEvent(enteredEventText);
+        props.onAddEvent(enteredEventText, date);
         setEnteredEventText('');
     }
 
@@ -27,12 +28,13 @@ function EventInput(props) {
       };
     
     const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+        setDatePickerVisibility(false);
     };
 
     const handleConfirm = (date) => {
         console.warn("A date has been picked: ", date);
         //console.warn("Converted date: ", date.toString());
+        setDate(date);
         hideDatePicker();
     };
 
