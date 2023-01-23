@@ -18,8 +18,8 @@ function EventInput(props) {
         setEnteredEventText(enteredText);
     }
 
-    function addEventHandler() {
-        props.onAddEvent(enteredEventText, date);
+    async function addEventHandler() {
+        await props.onAddEvent(enteredEventText, date);
         setEnteredEventText('');
     }
 
@@ -32,8 +32,6 @@ function EventInput(props) {
     };
 
     const handleConfirm = (date) => {
-        console.warn("A date has been picked: ", date);
-        //console.warn("Converted date: ", date.toString());
         setDate(date);
         hideDatePicker();
     };

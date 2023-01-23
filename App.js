@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect  } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { 
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Button,
   FlatList,
 } from 'react-native';
+import * as Calendar from 'expo-calendar';
 
 import EventItem from './components/EventItem';
 import EventInput from './components/EventInput';
@@ -22,11 +23,12 @@ export default function App() {
     setModalIsVisible(false);
   }
 
-  function addEventHandler(enteredEventText, date) {
+  async function addEventHandler(enteredEventText, date) {
     setEvents((currentEvents) => [
       ...currentEvents,
       { text: date.toString() + " " + enteredEventText, id: Math.random().toString() },
     ]);
+    await addEventToCalendar(enteredEventText, date);
     endAddEventHandler();
   }
 
@@ -35,6 +37,26 @@ export default function App() {
       return currentEvents.filter((event) => event.id !== id);
     });
   }
+
+  async function addEventToCalendar(enteredEventText, date) {
+    const { status } = await Calendar.requestCalendarPermissionsAsync();
+    const convertedDate = Date.parse(date)
+    if (status === 'granted') {
+      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+      const eventData = {
+        title: enteredEventText,
+        startDate: convertedDate,
+        endDate: convertedDate + 1800*1000,
+        alarms: [{
+          relativeOffset: -10,
+          method: Calendar.AlarmMethod.ALERT,
+        }]
+      }
+      await Calendar.createEventAsync(calendars[0].id, eventData)
+    } else {
+      console.warn("No calendar permissions granted!")
+    }
+}
 
   return (
     <>
