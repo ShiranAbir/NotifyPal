@@ -1,48 +1,46 @@
-import { useState, useEffect  } from 'react';
-import { StatusBar } from 'expo-status-bar';
+import { useState, useEffect  } from 'react'
+import { StatusBar } from 'expo-status-bar'
 import { 
   StyleSheet,
   View,
   Button,
   FlatList,
-} from 'react-native';
-import * as Calendar from 'expo-calendar';
+} from 'react-native'
+import * as Calendar from 'expo-calendar'
 
-import EventItem from './components/EventItem';
-import EventInput from './components/EventInput';
+import EventItem from './components/EventItem'
+import EventInput from './components/EventInput'
 
 export default function App() {
-  const [modalIsVisible, setModalIsVisible] = useState(false);
-  const [events, setEvents] = useState([]);
+  const [modalIsVisible, setModalIsVisible] = useState(false)
+  const [events, setEvents] = useState([])
 
   function startAddEventHandler() {
-    setModalIsVisible(true);
+    setModalIsVisible(true)
   }
 
   function endAddEventHandler() {
-    setModalIsVisible(false);
+    setModalIsVisible(false)
   }
 
   async function addEventHandler(enteredEventText, date) {
-    setEvents((currentEvents) => [
-      ...currentEvents,
-      { text: date.toString() + " " + enteredEventText, id: Math.random().toString() },
-    ]);
-    await addEventToCalendar(enteredEventText, date);
-    endAddEventHandler();
+    await addEventToCalendar(enteredEventText, date)
+    endAddEventHandler()
   }
 
-  function deleteEventHandler(id) {
+  async function deleteEventHandler(id) {
     setEvents((currentEvents) => {
-      return currentEvents.filter((event) => event.id !== id);
-    });
+      return currentEvents.filter((event) => event.id !== id)
+    })
+
+    await Calendar.deleteEventAsync(id)
   }
 
   async function addEventToCalendar(enteredEventText, date) {
-    const { status } = await Calendar.requestCalendarPermissionsAsync();
+    const { status } = await Calendar.requestCalendarPermissionsAsync()
     const convertedDate = Date.parse(date)
     if (status === 'granted') {
-      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT)
       const eventData = {
         title: enteredEventText,
         startDate: convertedDate,
@@ -52,7 +50,12 @@ export default function App() {
           method: Calendar.AlarmMethod.ALERT,
         }]
       }
-      await Calendar.createEventAsync(calendars[0].id, eventData)
+      const eventId = await Calendar.createEventAsync(calendars[0].id, eventData)
+
+      setEvents((currentEvents) => [
+        ...currentEvents,
+        { text: date.toString() + " " + enteredEventText, id: eventId },
+      ])
     } else {
       console.warn("No calendar permissions granted!")
     }
@@ -83,14 +86,14 @@ export default function App() {
               />
             }}
           keyExtractor={(item, index) => {
-            return item.id;
+            return item.id
           }}
           alwaysBounceVertical={false}
           />
         </View>
       </View>
     </>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -102,4 +105,4 @@ const styles = StyleSheet.create({
   eventsContainer: {
     flex: 5
   }
-});
+})
