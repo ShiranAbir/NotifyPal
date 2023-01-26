@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import {
     View,
+    Text,
     TextInput,
     Button,
     StyleSheet,
     Modal,
     Image,
+    Pressable,
 } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import moment from 'moment';
 
 function EventInput(props) {
     const [enteredEventText, setEnteredEventText] = useState('');
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState(false);
 
     function eventInputHandler(enteredText) {
         setEnteredEventText(enteredText);
@@ -21,6 +24,14 @@ function EventInput(props) {
     async function addEventHandler() {
         await props.onAddEvent(enteredEventText, date);
         setEnteredEventText('');
+    }
+
+    function closeModal() {
+        // Clean user input on close
+        setEnteredEventText('')
+        setDate(false)
+
+        props.onCancel()
     }
 
     const showDatePicker = () => {
@@ -36,6 +47,8 @@ function EventInput(props) {
         hideDatePicker();
     };
 
+    const dateView = (date) ? moment(date).format('LLL') : 'Please select date'
+
     return (
         <Modal visible={props.visible} animationType="slide">
             <View style={styles.inputContainer}>
@@ -44,15 +57,17 @@ function EventInput(props) {
                     // source={require('../assets/images/')}
                 />
                 <View style={styles.buttonDateContainer}>
-                    <View style={styles.button}>
-                        <Button title="Pick Date" onPress={showDatePicker} />
-                    </View>
                     <DateTimePickerModal
                         isVisible={isDatePickerVisible}
                         mode="datetime"
                         onConfirm={handleConfirm}
                         onCancel={hideDatePicker}
                     />
+                    <Pressable onPress={showDatePicker}>
+                        <Text style={styles.dateContainer}>
+                            {dateView}
+                        </Text>
+                    </Pressable>                    
                 </View>
                 <TextInput
                     style={styles.textInput}
@@ -62,7 +77,7 @@ function EventInput(props) {
                 />
                 <View style={styles.buttonContainer}>
                     <View style={styles.button}>
-                        <Button title="Cancel" onPress={props.onCancel} color="#f31282" />
+                        <Button title="Cancel" onPress={closeModal} color="#f31282" />
                     </View>
                     <View style={styles.button}>
                         <Button title="Add Event" onPress={addEventHandler} color="#b180f0" />
@@ -95,6 +110,13 @@ const styles = StyleSheet.create({
         color: '#120438',
         borderRadius: 6,
         width: '100%',
+        height: 50,
+        padding: 16,
+    },
+    dateContainer: {
+        backgroundColor: '#e4d0ff',
+        color: '#120438',
+        borderRadius: 6,
         height: 50,
         padding: 16,
     },
