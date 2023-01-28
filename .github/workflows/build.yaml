@@ -35,8 +35,8 @@ jobs:
           --profile=production
 
       - name: 📱 Upload binary
-      uses: actions/upload-artifact@v2
-      with:
-        draft: true
-        name: app-android
-        path: app-build 
+        uses: actions/upload-artifact@v2
+        with:
+          draft: true
+          name: app-android
+          path: app-build 
