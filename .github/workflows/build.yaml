@@ -27,11 +27,14 @@ jobs:
         run: npm install
 
       - name: 🚀 Build app
-        run: eas build --local --non-interactive --output ./app-build -p android --profile production
+        run: eas build --local --non-interactive --output ./app-android.apk -p android --profile production
 
-      - name: 📱 Upload binary
-        uses: actions/upload-artifact@v2
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           draft: true
-          name: app-android
-          path: app-build
+          generate_release_notes: true
+          files: |
+            app-android.apk
