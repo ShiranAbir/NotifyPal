@@ -7,7 +7,6 @@ import {
     StyleSheet,
     Modal,
     Image,
-    Pressable,
 } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
@@ -54,7 +53,7 @@ function EventInput(props) {
             <View style={styles.inputContainer}>
                 <Image
                     style={styles.image}
-                    // source={require('../assets/images/')}
+                    source={require('../assets/images/alarm.png')}
                 />
                 <View style={styles.buttonDateContainer}>
                     <DateTimePickerModal
@@ -63,11 +62,12 @@ function EventInput(props) {
                         onConfirm={handleConfirm}
                         onCancel={hideDatePicker}
                     />
-                    <Pressable onPress={showDatePicker}>
-                        <Text style={styles.dateContainer}>
-                            {dateView}
-                        </Text>
-                    </Pressable>                    
+                    <Text style={styles.dateContainer}>
+                        {dateView}
+                    </Text>
+                    <View style={styles.button}>
+                        <Button title='Select alarm' color="#f32230" onPress={showDatePicker}></Button>
+                    </View>               
                 </View>
                 <TextInput
                     style={styles.textInput}
@@ -99,8 +99,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#311b6b'
     },
     image: {
-        width: 100,
-        height: 100,
+        width: 64,
+        height: 64,
         margin: 20,
     },
     textInput: {
@@ -131,5 +131,7 @@ const styles = StyleSheet.create({
     button: {
         width: 100,
         marginHorizontal: 8,
+        flex: 1,
+        justifyContent: 'center',
     }
 });

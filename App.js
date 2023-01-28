@@ -1,5 +1,6 @@
 import { useState, useEffect  } from 'react'
 import { StatusBar } from 'expo-status-bar'
+import moment from 'moment';
 import { 
   StyleSheet,
   View,
@@ -54,7 +55,7 @@ export default function App() {
 
       setEvents((currentEvents) => [
         ...currentEvents,
-        { text: date.toString() + " " + enteredEventText, id: eventId },
+        { text: moment(date).format('LLL') + " " + enteredEventText, id: eventId },
       ])
     } else {
       console.warn("No calendar permissions granted!")
@@ -65,11 +66,13 @@ export default function App() {
     <>
       <StatusBar style="light" />
       <View style={styles.appContainer}>
-        <Button
-          title="Add New Event"
-          color="#a065ec"
-          onPress={startAddEventHandler}
-        />
+        <View style={styles.addEventBtn}>
+          <Button
+            title="Add New Event"
+            color="#a065ec"
+            onPress={startAddEventHandler}
+          />
+        </View>
         <EventInput
           visible={modalIsVisible}
           onAddEvent={addEventHandler}
@@ -104,5 +107,8 @@ const styles = StyleSheet.create({
   },
   eventsContainer: {
     flex: 5
+  },
+  addEventBtn:{
+    marginVertical: 10
   }
 })
